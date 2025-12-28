@@ -54,6 +54,20 @@ impl Classify {
     }
 }
 
+impl Options {
+    /// Returns whether the mark flag was given and, if so, the duration in seconds.
+    pub fn mark_duration(matches: &crate::options::parser::MatchedFlags<'_>) -> Option<std::time::Duration> {
+        if let Some(word) = matches.get(&crate::options::flags::MARK).ok().flatten() {
+            if let Ok(s) = word.to_str() {
+                if let Ok(dur) = parse_duration::parse(s) {
+                    return Some(dur);
+                }
+            }
+        }
+        None
+    }
+}
+
 impl ShowIcons {
     pub fn deduce<V: Vars>(matches: &MatchedFlags<'_>, vars: &V) -> Result<Self, OptionsError> {
         enum AlwaysOrAuto {

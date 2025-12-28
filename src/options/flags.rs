@@ -76,8 +76,9 @@ pub static ACCESSED:    Arg = Arg { short: Some(b'u'), long: "accessed",    take
 pub static CREATED:     Arg = Arg { short: Some(b'U'), long: "created",     takes_value: TakesValue::Forbidden };
 pub static TIME_STYLE:  Arg = Arg { short: None,       long: "time-style",  takes_value: TakesValue::Necessary(Some(TIME_STYLES)) };
 pub static HYPERLINK:   Arg = Arg { short: None,       long: "hyperlink",   takes_value: TakesValue::Forbidden };
-pub static MOUNTS:      Arg = Arg { short: Some(b'M'), long: "mounts",      takes_value: TakesValue::Forbidden };
-pub static SMART_GROUP: Arg = Arg { short: None,       long: "smart-group", takes_value: TakesValue::Forbidden };
+ pub static MARK:        Arg = Arg { short: None,       long: "mark",        takes_value: TakesValue::Necessary(None) };
+ pub static MOUNTS:      Arg = Arg { short: Some(b'M'), long: "mounts",      takes_value: TakesValue::Forbidden };
+ pub static SMART_GROUP: Arg = Arg { short: None,       long: "smart-group", takes_value: TakesValue::Forbidden };
 const TIMES: Values = &["modified", "changed", "accessed", "created"];
 const TIME_STYLES: Values = &["default", "long-iso", "full-iso", "iso", "relative"];
 

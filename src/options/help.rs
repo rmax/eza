@@ -34,7 +34,9 @@ DISPLAY OPTIONS
   --hyperlink                display entries as hyperlinks
   --absolute                 display entries with their absolute path (on, follow, off)
   --follow-symlinks          drill down into symbolic links that point to directories
-  -w, --width COLS           set screen width in columns
+   -w, --width COLS           set screen width in columns
+   --mark DURATION           mark files that were created or modified since duration (e.g. 5s, 2m, 1h)
+
 
 
 FILTERING AND SORTING OPTIONS

@@ -1,5 +1,9 @@
 # SPDX-FileCopyrightText: 2024 Christina Sørensen
 # SPDX-License-Identifier: EUPL-1.2
+#
+# SPDX-FileCopyrightText: 2023-2024 Christina Sørensen, eza contributors
+# SPDX-FileCopyrightText: 2014 Benjamin Sago
+# SPDX-License-Identifier: MIT
 [package]
 name = "eza"
 description = "A modern replacement for ls"
@@ -147,6 +151,7 @@ nix-local = []
 # Should only be used inside of flake.nix
 # Shouldn't ever be used in CI (slow!)
 powertest = []
+# Should only be used inside of flake.nix locally (not on CI)
 nix-generated = []
 
 # use LTO for smaller binaries (that take longer to build)
