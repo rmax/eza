@@ -310,6 +310,7 @@ impl<C: Colours> FileName<'_, '_, C> {
                             embed_hyperlinks: EmbedHyperlinks::Off,
                             is_a_tty: self.options.is_a_tty,
                             absolute: Absolute::Off,
+                            mark_duration: None,
                         };
 
                         let target_name = FileName {

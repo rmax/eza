@@ -140,8 +140,7 @@ chrono = { version = "0.4.40", default-features = false, features = ["clock"] }
 criterion = { version = "0.5.1", features = ["html_reports"] }
 trycmd = "0.15"
 
-[dependencies]
-parse-duration = "2.1"
+parse_duration = "2.1"
 
 [features]
 default = ["git"]
