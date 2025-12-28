@@ -30,7 +30,7 @@ pub struct Options {
     /// How to display file names with spaces (with or without quotes).
     pub quote_style: QuoteStyle,
 
-    /// Whether to make file names hyperlinks.
+    /// Whether to prepend icon characters before file names.
     pub embed_hyperlinks: EmbedHyperlinks,
 
     /// Whether to display files with their absolute path.
@@ -38,6 +38,9 @@ pub struct Options {
 
     /// Whether we are in a console or redirecting the output
     pub is_a_tty: bool,
+
+    /// If set, files created or modified within this duration will be marked with an asterisk
+    pub mark_duration: Option<std::time::Duration>,
 }
 
 impl Options {
@@ -60,6 +63,13 @@ impl Options {
             },
             mount_style: MountStyle::JustDirectoryNames,
         }
+    }
+
+    /// Set the mark duration on the file_name options
+    #[must_use]
+    pub fn with_mark_duration(mut self, d: Option<std::time::Duration>) -> Self {
+        self.mark_duration = d;
+        self
     }
 }
 
@@ -255,6 +265,29 @@ impl<C: Colours> FileName<'_, '_, C> {
             // link’s filename as the link colour.
             for bit in self.escaped_file_name(filename_style_override) {
                 bits.push(bit);
+            }
+
+            // If the mark flag was given, and the file was created or modified
+            // within the given duration, append an asterisk to indicate this.
+            if let Some(dur) = self.options.mark_duration {
+                fn within_duration(f: &File<'_>, d: std::time::Duration) -> bool {
+                    let now = chrono::Local::now().naive_local();
+                    if let Some(m) = f.modified_time() {
+                        if now.signed_duration_since(m) <= chrono::Duration::from_std(d).unwrap_or(chrono::Duration::max_value()) {
+                            return true;
+                        }
+                    }
+                    if let Some(c) = f.created_time() {
+                        if now.signed_duration_since(c) <= chrono::Duration::from_std(d).unwrap_or(chrono::Duration::max_value()) {
+                            return true;
+                        }
+                    }
+                    false
+                }
+
+                if within_duration(self.file, dur) {
+                    bits.push(self.style().paint(" *"));
+                }
             }
         }
 

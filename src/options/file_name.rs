@@ -26,6 +26,8 @@ impl Options {
 
         let absolute = Absolute::deduce(matches)?;
 
+        let mark_duration = Self::mark_duration(matches);
+
         Ok(Self {
             classify,
             show_icons,
@@ -33,6 +35,7 @@ impl Options {
             embed_hyperlinks,
             absolute,
             is_a_tty,
+            mark_duration,
         })
     }
 }

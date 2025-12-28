@@ -108,6 +108,7 @@ plist = { version = "1.7.0", default-features = false }
 uutils_term_grid = "0.7.0"
 terminal_size = "0.4.2"
 timeago = { version = "0.4.2", default-features = false }
+humantime = "2.1"
 unicode-width = "0.2"
 ansi-width = "0.1.0"
 serde = { version = "1.0.219", features = ["derive"] }
@@ -138,6 +139,9 @@ chrono = { version = "0.4.40", default-features = false, features = ["clock"] }
 [dev-dependencies]
 criterion = { version = "0.5.1", features = ["html_reports"] }
 trycmd = "0.15"
+
+[dependencies]
+parse-duration = "2.1"
 
 [features]
 default = ["git"]
