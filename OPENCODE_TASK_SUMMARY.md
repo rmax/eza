@@ -2,26 +2,26 @@
 
 ## Summary
 
-Implemented a new CLI flag: `--mark=<DURATION>`. When provided, files that were created or modified within the supplied duration will have an appended asterisk (` *`) in listings. This works across views (lines, grid, details, grid-details, and tree).
+Implemented a new CLI flag: `--since=<DURATION>`. When provided, files that were created or modified within the supplied duration will have an appended asterisk (` *`) in listings. This works across views (lines, grid, details, grid-details, and tree).
 
-Usage example: `eza --tree --mark 5s` will mark files created/modified within the last 5 seconds.
+Usage example: `eza --tree --since 5s` will mark files created/modified within the last 5 seconds.
 
 ## Changes made
 
 - options:
-  - Added new flag `--mark` to `src/options/flags.rs` (takes a value).
+  - Replaced `--mark` with `--since` in `src/options/flags.rs` (takes a value).
   - Documented the flag in `src/options/help.rs` and `man/eza.1.md`.
-  - Implemented `Options::mark_duration` parser in `src/options/file_name.rs` which parses the provided duration using humantime (supports values like `5s`, `2m`, `1h`, `1d`).
+  - Implemented `Options::since_duration` parser in `src/options/file_name.rs` which parses the provided duration using humantime (supports values like `5s`, `2m`, `1h`, `1d`).
 
 - output:
-  - Added an optional `mark_duration: Option<Duration>` field to `output::file_name::Options` and threaded it through when deducing file name options.
+  - Replaced `mark_duration: Option<Duration>` with `since_duration: Option<Duration>` in `output::file_name::Options` and threaded it through when deducing file name options.
   - Appended an asterisk (` *`) to the printed filename when a file’s modified or created time is within the provided duration.
 
 - dependencies:
   - Added `humantime` (for parsing human durations) and `parse_duration` (was considered but we use humantime in the final impl).
 
 - tests:
-  - Ran unit and integration tests. All existing tests pass.
+  - Ran unit and integration tests. All existing tests pass. No additional tests were added for the renaming.
 
 ## Implementation notes
 

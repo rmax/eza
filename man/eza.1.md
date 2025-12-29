@@ -129,7 +129,7 @@ When used without a value, defaults to ‘`automatic`’.
 `-w`, `--width=COLS`
 : Set screen width in columns.
 
-`--mark=DURATION`
+`--since=DURATION`
 : Mark files that were created or modified since DURATION (e.g., `5s`, `2m`, `1h`).
 
 FILTERING AND SORTING OPTIONS
