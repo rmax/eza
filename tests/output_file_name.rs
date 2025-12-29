@@ -1,8 +1,9 @@
 use tempfile::tempdir;
 use filetime::{FileTime, set_file_times};
-use crate::fs::File;
-use crate::output::file_name::{Options as FileOptions, Classify, QuoteStyle, ShowIcons, EmbedHyperlinks, Absolute};
-use crate::output::render::filetype as filetype_mod;
+use eza::fs::File;
+use eza::output::file_name::{Options as FileOptions, Classify, QuoteStyle, ShowIcons, EmbedHyperlinks, Absolute};
+use eza::output::render::filetype as filetype_mod;
+use eza::theme::FileNameStyle;
 use nu_ansi_term::Style;
 
 struct TestColours;

@@ -27,6 +27,7 @@ impl View {
         let follow_links = matches.has(&flags::FOLLOW_LINKS)?;
         let total_size = matches.has(&flags::TOTAL_SIZE)?;
         let file_style = FileStyle::deduce(matches, vars, is_tty)?;
+        eprintln!("DEBUG View::deduce is_tty={} since_duration={:?}", is_tty, file_style.since_duration);
         Ok(Self {
             mode,
             width,

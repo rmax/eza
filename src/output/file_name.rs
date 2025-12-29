@@ -272,20 +272,36 @@ impl<C: Colours> FileName<'_, '_, C> {
             if let Some(dur) = self.options.since_duration {
                 fn within_duration(f: &File<'_>, d: std::time::Duration) -> bool {
                     let now = chrono::Local::now().naive_local();
-                    if let Some(m) = f.modified_time() {
+                    let metadata_ok = f.metadata().is_ok();
+                    let modified_opt = f.metadata().ok().and_then(|md| md.modified().ok()).and_then(Self::systemtime_to_naivedatetime);
+                    let created_opt = f.metadata().ok().and_then(|md| md.created().ok()).and_then(Self::systemtime_to_naivedatetime);
+                    eprintln!("DEBUG meta_ok={} modified_present={} created_present={} for {}", metadata_ok, modified_opt.is_some(), created_opt.is_some(), f.name);
+                    if let Some(m) = modified_opt {
+                        let diff = now.signed_duration_since(m).num_seconds();
+                        eprintln!("DEBUG within_duration: file {} modified at {:?}, now {:?}, diff {}s, limit {:?}", f.name, m, now, diff, d);
                         if now.signed_duration_since(m) <= chrono::Duration::from_std(d).unwrap_or(chrono::Duration::max_value()) {
                             return true;
                         }
+                    } else {
+                        eprintln!("DEBUG within_duration: file {} has no modified_time", f.name);
                     }
-                    if let Some(c) = f.created_time() {
+                    if let Some(c) = created_opt {
+                        let diff = now.signed_duration_since(c).num_seconds();
+                        eprintln!("DEBUG within_duration: file {} created at {:?}, now {:?}, diff {}s, limit {:?}", f.name, c, now, diff, d);
                         if now.signed_duration_since(c) <= chrono::Duration::from_std(d).unwrap_or(chrono::Duration::max_value()) {
                             return true;
                         }
+                    } else {
+                        eprintln!("DEBUG within_duration: file {} has no created_time", f.name);
                     }
                     false
                 }
 
-                if within_duration(self.file, dur) {
+                eprintln!("DEBUG PRE: f.modified_time()={:?} f.created_time()={:?}", self.file.modified_time(), self.file.created_time());
+                let wd = within_duration(self.file, dur);
+                eprintln!("DEBUG: since check {} dur {:?} -> {}", self.file.path.display(), dur, wd);
+
+                if wd {
                     bits.push(self.style().paint(" *"));
                 }
             }
