@@ -141,6 +141,8 @@ criterion = { version = "0.5.1", features = ["html_reports"] }
 trycmd = "0.15"
 
 parse_duration = "2.1"
+filetime = "0.2"
+tempfile = "3"
 
 [features]
 default = ["git"]
