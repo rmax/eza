@@ -270,30 +270,22 @@ impl<C: Colours> FileName<'_, '_, C> {
             // If the --since flag was given, and the file was created or modified
             // within the given duration, append an asterisk to indicate this.
             if let Some(dur) = self.options.since_duration {
-                eprintln!("DEBUG OUTER: file {} metadata_ok={} modified_time={:?} created_time={:?}", self.file.name, self.file.metadata().is_ok(), self.file.modified_time(), self.file.created_time());
+        
                 fn within_duration(f: &File<'_>, d: std::time::Duration) -> bool {
                     let now = chrono::Local::now().naive_local();
                     let metadata_ok = f.metadata().is_ok();
                     let modified_opt = f.metadata().ok().and_then(|md| md.modified().ok()).and_then(|st| crate::fs::File::systemtime_to_naivedatetime(st));
                     let created_opt = f.metadata().ok().and_then(|md| md.created().ok()).and_then(|st| crate::fs::File::systemtime_to_naivedatetime(st));
-                    eprintln!("DEBUG meta_ok={} modified_present={} created_present={} for {}", metadata_ok, modified_opt.is_some(), created_opt.is_some(), f.name);
                     if let Some(m) = modified_opt {
                         let diff = now.signed_duration_since(m).num_seconds();
-                        eprintln!("DEBUG within_duration: file {} modified at {:?}, now {:?}, diff {}s, limit {:?}", f.name, m, now, diff, d);
                         if now.signed_duration_since(m) <= chrono::Duration::from_std(d).unwrap_or(chrono::Duration::max_value()) {
                             return true;
                         }
-                    } else {
-                        eprintln!("DEBUG within_duration: file {} has no modified_time", f.name);
                     }
                     if let Some(c) = created_opt {
-                        let diff = now.signed_duration_since(c).num_seconds();
-                        eprintln!("DEBUG within_duration: file {} created at {:?}, now {:?}, diff {}s, limit {:?}", f.name, c, now, diff, d);
                         if now.signed_duration_since(c) <= chrono::Duration::from_std(d).unwrap_or(chrono::Duration::max_value()) {
                             return true;
                         }
-                    } else {
-                        eprintln!("DEBUG within_duration: file {} has no created_time", f.name);
                     }
                     false
                 }
