@@ -159,18 +159,10 @@ impl FileFilter {
         };
         
         // Get the modified timestamp
-        let modified = file.modified_time().and_then(|dt| {
-            dt.and_utc().timestamp().try_into().ok().and_then(|secs: u64| {
-                SystemTime::UNIX_EPOCH.checked_add(std::time::Duration::from_secs(secs))
-            })
-        });
+        let modified = Self::naive_datetime_to_systemtime(file.modified_time());
         
         // Get the created timestamp
-        let created = file.created_time().and_then(|dt| {
-            dt.and_utc().timestamp().try_into().ok().and_then(|secs: u64| {
-                SystemTime::UNIX_EPOCH.checked_add(std::time::Duration::from_secs(secs))
-            })
-        });
+        let created = Self::naive_datetime_to_systemtime(file.created_time());
         
         // Use modified time if available, otherwise fall back to created time
         // We prioritize modified_time as it's more reliably set across platforms
@@ -179,6 +171,15 @@ impl FileFilter {
         // If we have a timestamp, check if it's recent enough
         // If no timestamp is available, conservatively exclude the file
         timestamp_to_check.map_or(false, |timestamp| timestamp >= cutoff)
+    }
+
+    /// Convert a NaiveDateTime to SystemTime for comparison
+    fn naive_datetime_to_systemtime(dt: Option<chrono::NaiveDateTime>) -> Option<std::time::SystemTime> {
+        dt.and_then(|dt| {
+            dt.and_utc().timestamp().try_into().ok().and_then(|secs: u64| {
+                std::time::SystemTime::UNIX_EPOCH.checked_add(std::time::Duration::from_secs(secs))
+            })
+        })
     }
 
     /// Sort the files in the given vector based on the sort field option.

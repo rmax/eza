@@ -15,7 +15,12 @@ fn get_eza_binary() -> PathBuf {
 
 fn create_file_with_mtime(dir: &TempDir, filename: &str, age_secs: u64) -> PathBuf {
     let file_path = dir.path().join(filename);
-    fs::File::create(&file_path).expect("Failed to create file");
+    create_file_with_mtime_at_path(&file_path, age_secs);
+    file_path
+}
+
+fn create_file_with_mtime_at_path(file_path: &std::path::Path, age_secs: u64) {
+    fs::File::create(file_path).expect("Failed to create file");
     
     // Set the modification time to (now - age_secs)
     let now = SystemTime::now();
@@ -25,8 +30,7 @@ fn create_file_with_mtime(dir: &TempDir, filename: &str, age_secs: u64) -> PathB
         .map(|d| FileTime::from_unix_time(d.as_secs() as i64, 0))
         .expect("Failed to calculate file time");
     
-    set_file_mtime(&file_path, file_time).expect("Failed to set mtime");
-    file_path
+    set_file_mtime(file_path, file_time).expect("Failed to set mtime");
 }
 
 #[test]
@@ -135,13 +139,7 @@ fn test_since_filter_tree_view() {
     
     // Create file in subdirectory
     let sub_file = subdir.join("recent_sub.txt");
-    fs::File::create(&sub_file).expect("Failed to create sub file");
-    let file_time = SystemTime::now()
-        .checked_sub(Duration::from_secs(60))
-        .and_then(|t| t.duration_since(SystemTime::UNIX_EPOCH).ok())
-        .map(|d| FileTime::from_unix_time(d.as_secs() as i64, 0))
-        .expect("Failed to calculate file time");
-    set_file_mtime(&sub_file, file_time).expect("Failed to set mtime");
+    create_file_with_mtime_at_path(&sub_file, 60);
     
     let eza = get_eza_binary();
     
