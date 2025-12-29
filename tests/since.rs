@@ -33,6 +33,12 @@ fn since_marks_recent_files() {
     let old_ft = FileTime::from_unix_time(946684800, 0);
     set_file_times(&old_path, old_ft, old_ft).expect("set old file time");
 
+    // Ensure recent file has a current timestamp (30 minutes ago) so it's
+    // deterministically within the 1 hour window used by this test.
+    let recent_time = std::time::SystemTime::now() - std::time::Duration::from_secs(30 * 60);
+    let recent_ft = FileTime::from_system_time(recent_time);
+    set_file_times(&recent_path, recent_ft, recent_ft).expect("set recent file time");
+
     let eza_bin = std::env::var("CARGO_BIN_EXE_eza").unwrap_or_else(|_| {
         // Fallback to target/debug/eza if Cargo didn't provide the env var
         format!("{}/target/debug/eza", std::env::var("CARGO_MANIFEST_DIR").unwrap())
