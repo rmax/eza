@@ -167,7 +167,7 @@ Sort fields starting with a capital letter will sort uppercase before lowercase:
 : Glob patterns, pipe-separated, of files to ignore.
 
 `--since=DURATION`
-: Show only files modified or created within the specified duration from now. Duration can be specified in human-readable format such as '10m' (10 minutes), '1h' (1 hour), '2d' (2 days), '1w' (1 week), or ISO 8601 duration format like 'PT5S'. Files without timestamps are excluded.
+: Show only files modified or created within the specified duration from now. Duration can be specified in human-readable format such as '10m' (10 minutes), '1h' (1 hour), '2d' (2 days), '1w' (1 week), or with spaces like '5 minutes', '2 hours'. Files without timestamps are excluded.
 
 `--git-ignore` [if eza was built with git support]
 : Do not list files that are ignored by Git.
