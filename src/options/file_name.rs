@@ -71,6 +71,18 @@ impl Options {
     }
 }
 
+#[cfg(test)]
+mod test {
+    use super::*;
+    use crate::options::test::{parse_for_test, Strictnesses};
+
+    #[test]
+    fn since_flag_parsed() {
+        let results: Vec<Option<std::time::Duration>> = parse_for_test(&["--since", "1h"], &crate::options::flags::ALL_ARGS, Strictnesses::Both, |flags| Options::since_duration(flags));
+        assert!(results.iter().any(|d| d.is_some()), "--since did not parse in any strictness mode");
+    }
+}
+
 impl ShowIcons {
     pub fn deduce<V: Vars>(matches: &MatchedFlags<'_>, vars: &V) -> Result<Self, OptionsError> {
         enum AlwaysOrAuto {
