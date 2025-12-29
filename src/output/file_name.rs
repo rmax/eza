@@ -40,7 +40,7 @@ pub struct Options {
     pub is_a_tty: bool,
 
     /// If set, files created or modified within this duration will be marked with an asterisk
-    pub mark_duration: Option<std::time::Duration>,
+    pub since_duration: Option<std::time::Duration>,
 }
 
 impl Options {
@@ -65,10 +65,10 @@ impl Options {
         }
     }
 
-    /// Set the mark duration on the file_name options
+    /// Set the since duration on the file_name options
     #[must_use]
-    pub fn with_mark_duration(mut self, d: Option<std::time::Duration>) -> Self {
-        self.mark_duration = d;
+    pub fn with_since_duration(mut self, d: Option<std::time::Duration>) -> Self {
+        self.since_duration = d;
         self
     }
 }
@@ -267,9 +267,9 @@ impl<C: Colours> FileName<'_, '_, C> {
                 bits.push(bit);
             }
 
-            // If the mark flag was given, and the file was created or modified
+            // If the --since flag was given, and the file was created or modified
             // within the given duration, append an asterisk to indicate this.
-            if let Some(dur) = self.options.mark_duration {
+            if let Some(dur) = self.options.since_duration {
                 fn within_duration(f: &File<'_>, d: std::time::Duration) -> bool {
                     let now = chrono::Local::now().naive_local();
                     if let Some(m) = f.modified_time() {
@@ -310,7 +310,7 @@ impl<C: Colours> FileName<'_, '_, C> {
                             embed_hyperlinks: EmbedHyperlinks::Off,
                             is_a_tty: self.options.is_a_tty,
                             absolute: Absolute::Off,
-                            mark_duration: None,
+                            since_duration: None,
                         };
 
                         let target_name = FileName {

@@ -26,7 +26,7 @@ impl Options {
 
         let absolute = Absolute::deduce(matches)?;
 
-        let mark_duration = Self::mark_duration(matches);
+        let since_duration = Self::since_duration(matches);
 
         Ok(Self {
             classify,
@@ -35,7 +35,7 @@ impl Options {
             embed_hyperlinks,
             absolute,
             is_a_tty,
-            mark_duration,
+            since_duration,
         })
     }
 }
@@ -58,9 +58,9 @@ impl Classify {
 }
 
 impl Options {
-    /// Returns whether the mark flag was given and, if so, the duration in seconds.
-    pub fn mark_duration(matches: &crate::options::parser::MatchedFlags<'_>) -> Option<std::time::Duration> {
-        if let Some(word) = matches.get(&crate::options::flags::MARK).ok().flatten() {
+    /// Returns whether the since flag was given and, if so, the duration in seconds.
+    pub fn since_duration(matches: &crate::options::parser::MatchedFlags<'_>) -> Option<std::time::Duration> {
+        if let Some(word) = matches.get(&crate::options::flags::SINCE).ok().flatten() {
             if let Some(s) = word.to_str() {
                 if let Ok(dur) = humantime::parse_duration(s) {
                     return Some(dur);

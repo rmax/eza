@@ -76,7 +76,7 @@ pub static ACCESSED:    Arg = Arg { short: Some(b'u'), long: "accessed",    take
 pub static CREATED:     Arg = Arg { short: Some(b'U'), long: "created",     takes_value: TakesValue::Forbidden };
 pub static TIME_STYLE:  Arg = Arg { short: None,       long: "time-style",  takes_value: TakesValue::Necessary(Some(TIME_STYLES)) };
 pub static HYPERLINK:   Arg = Arg { short: None,       long: "hyperlink",   takes_value: TakesValue::Forbidden };
- pub static MARK:        Arg = Arg { short: None,       long: "mark",        takes_value: TakesValue::Necessary(None) };
+ pub static SINCE:       Arg = Arg { short: None,       long: "since",       takes_value: TakesValue::Necessary(None) };
  pub static MOUNTS:      Arg = Arg { short: Some(b'M'), long: "mounts",      takes_value: TakesValue::Forbidden };
  pub static SMART_GROUP: Arg = Arg { short: None,       long: "smart-group", takes_value: TakesValue::Forbidden };
 const TIMES: Values = &["modified", "changed", "accessed", "created"];
@@ -110,7 +110,7 @@ pub static ALL_ARGS: Args = Args(&[
     &IGNORE_GLOB, &GIT_IGNORE, &ONLY_DIRS, &ONLY_FILES,
 
     &BINARY, &BYTES, &GROUP, &NUMERIC, &HEADER, &ICONS, &INODE, &LINKS, &MODIFIED, &CHANGED,
-    &BLOCKSIZE, &TOTAL_SIZE, &TIME, &ACCESSED, &CREATED, &TIME_STYLE, &HYPERLINK, &MARK, &MOUNTS,
+    &BLOCKSIZE, &TOTAL_SIZE, &TIME, &ACCESSED, &CREATED, &TIME_STYLE, &HYPERLINK, &SINCE, &MOUNTS,
     &NO_PERMISSIONS, &NO_FILESIZE, &NO_USER, &NO_TIME, &SMART_GROUP, &NO_SYMLINKS, &SHOW_SYMLINKS,
 
     &GIT, &NO_GIT, &GIT_REPOS, &GIT_REPOS_NO_STAT,
