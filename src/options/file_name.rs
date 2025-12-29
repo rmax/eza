@@ -78,7 +78,7 @@ mod test {
 
     #[test]
     fn since_flag_parsed() {
-        let results: Vec<Option<std::time::Duration>> = parse_for_test(&["--since", "1h"], &crate::options::flags::ALL_ARGS, Strictnesses::Both, |flags| Options::since_duration(flags));
+        let results: Vec<Option<std::time::Duration>> = parse_for_test(&["--since", "1h"], crate::options::flags::ALL_ARGS.0, Strictnesses::Both, |flags| Options::since_duration(flags));
         assert!(results.iter().any(|d| d.is_some()), "--since did not parse in any strictness mode");
     }
 }
