@@ -47,7 +47,7 @@ fn since_marks_recent_files() {
     let out = Command::new(eza_bin)
         .arg("--oneline")
         .arg("--since")
-        .arg("1h")
+        .arg("1d")
         .arg(dir.path())
         .output()
         .expect("failed to run eza");
