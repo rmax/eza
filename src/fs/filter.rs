@@ -158,30 +158,27 @@ impl FileFilter {
             None => return true, // If we can't calculate cutoff, include the file
         };
         
-        // Get the most recent timestamp (max of modified and created times)
+        // Get the modified timestamp
         let modified = file.modified_time().and_then(|dt| {
             dt.and_utc().timestamp().try_into().ok().and_then(|secs: u64| {
                 SystemTime::UNIX_EPOCH.checked_add(std::time::Duration::from_secs(secs))
             })
         });
         
+        // Get the created timestamp
         let created = file.created_time().and_then(|dt| {
             dt.and_utc().timestamp().try_into().ok().and_then(|secs: u64| {
                 SystemTime::UNIX_EPOCH.checked_add(std::time::Duration::from_secs(secs))
             })
         });
         
-        // Use the most recent of modified or created time
-        let most_recent = match (modified, created) {
-            (Some(m), Some(c)) => Some(if m > c { m } else { c }),
-            (Some(m), None) => Some(m),
-            (None, Some(c)) => Some(c),
-            (None, None) => None,
-        };
+        // Use modified time if available, otherwise fall back to created time
+        // We prioritize modified_time as it's more reliably set across platforms
+        let timestamp_to_check = modified.or(created);
         
         // If we have a timestamp, check if it's recent enough
         // If no timestamp is available, conservatively exclude the file
-        most_recent.map_or(false, |timestamp| timestamp >= cutoff)
+        timestamp_to_check.map_or(false, |timestamp| timestamp >= cutoff)
     }
 
     /// Sort the files in the given vector based on the sort field option.

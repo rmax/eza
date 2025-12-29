@@ -135,6 +135,8 @@ chrono = { version = "0.4.40", default-features = false, features = ["clock"] }
 [dev-dependencies]
 criterion = { version = "0.5.1", features = ["html_reports"] }
 trycmd = "0.15"
+tempfile = "3.13"
+filetime = "0.2"
 
 [features]
 default = ["git"]
