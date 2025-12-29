@@ -270,6 +270,7 @@ impl<C: Colours> FileName<'_, '_, C> {
             // If the --since flag was given, and the file was created or modified
             // within the given duration, append an asterisk to indicate this.
             if let Some(dur) = self.options.since_duration {
+                eprintln!("DEBUG OUTER: file {} metadata_ok={} modified_time={:?} created_time={:?}", self.file.name, self.file.metadata().is_ok(), self.file.modified_time(), self.file.created_time());
                 fn within_duration(f: &File<'_>, d: std::time::Duration) -> bool {
                     let now = chrono::Local::now().naive_local();
                     let metadata_ok = f.metadata().is_ok();
@@ -297,7 +298,6 @@ impl<C: Colours> FileName<'_, '_, C> {
                     false
                 }
 
-                eprintln!("DEBUG PRE: f.modified_time()={:?} f.created_time()={:?}", self.file.modified_time(), self.file.created_time());
                 let wd = within_duration(self.file, dur);
                 eprintln!("DEBUG: since check {} dur {:?} -> {}", self.file.path.display(), dur, wd);
 
