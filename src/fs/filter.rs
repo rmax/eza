@@ -146,16 +146,15 @@ impl FileFilter {
         }
     }
 
-    /// Check if a file is recent enough based on the since_duration.
+    /// Check if a file is recent enough based on the `since_duration`.
     /// A file is considered recent if its most recent timestamp (modified or created)
     /// is within the duration window from now.
     fn is_recent_file(&self, file: &File<'_>, duration: std::time::Duration) -> bool {
         use std::time::SystemTime;
         
         let now = SystemTime::now();
-        let cutoff = match now.checked_sub(duration) {
-            Some(t) => t,
-            None => return true, // If we can't calculate cutoff, include the file
+        let Some(cutoff) = now.checked_sub(duration) else {
+            return true; // If we can't calculate cutoff, include the file
         };
         
         // Get the modified timestamp
@@ -173,7 +172,7 @@ impl FileFilter {
         timestamp_to_check.map_or(false, |timestamp| timestamp >= cutoff)
     }
 
-    /// Convert a NaiveDateTime to SystemTime for comparison
+    /// Convert a `NaiveDateTime` to `SystemTime` for comparison
     fn naive_datetime_to_systemtime(dt: Option<chrono::NaiveDateTime>) -> Option<std::time::SystemTime> {
         dt.and_then(|dt| {
             dt.and_utc().timestamp().try_into().ok().and_then(|secs: u64| {
