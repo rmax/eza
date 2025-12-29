@@ -273,8 +273,8 @@ impl<C: Colours> FileName<'_, '_, C> {
                 fn within_duration(f: &File<'_>, d: std::time::Duration) -> bool {
                     let now = chrono::Local::now().naive_local();
                     let metadata_ok = f.metadata().is_ok();
-                    let modified_opt = f.metadata().ok().and_then(|md| md.modified().ok()).and_then(Self::systemtime_to_naivedatetime);
-                    let created_opt = f.metadata().ok().and_then(|md| md.created().ok()).and_then(Self::systemtime_to_naivedatetime);
+                    let modified_opt = f.metadata().ok().and_then(|md| md.modified().ok()).and_then(|st| crate::fs::File::systemtime_to_naivedatetime(st));
+                    let created_opt = f.metadata().ok().and_then(|md| md.created().ok()).and_then(|st| crate::fs::File::systemtime_to_naivedatetime(st));
                     eprintln!("DEBUG meta_ok={} modified_present={} created_present={} for {}", metadata_ok, modified_opt.is_some(), created_opt.is_some(), f.name);
                     if let Some(m) = modified_opt {
                         let diff = now.signed_duration_since(m).num_seconds();

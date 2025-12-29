@@ -770,7 +770,7 @@ impl<'dir> File<'dir> {
     ///
     /// Fixes #655 and #667 in `Self::modified_time`, `Self::accessed_time` and
     /// `Self::created_time`.
-    fn systemtime_to_naivedatetime(st: SystemTime) -> Option<NaiveDateTime> {
+    pub(crate) fn systemtime_to_naivedatetime(st: SystemTime) -> Option<NaiveDateTime> {
         let duration = st.duration_since(SystemTime::UNIX_EPOCH).ok()?;
 
         DateTime::from_timestamp(
