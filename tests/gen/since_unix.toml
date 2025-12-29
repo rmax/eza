@@ -1,0 +1,3 @@
+bin.name = "eza"
+args = "tests/gen/since_test_dir --oneline --since 1h"
+stdin = ""
