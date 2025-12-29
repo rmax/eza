@@ -163,9 +163,18 @@ impl FileFilter {
         // Get the created timestamp
         let created = Self::naive_datetime_to_systemtime(file.created_time());
         
-        // Use modified time if available, otherwise fall back to created time
-        // We prioritize modified_time as it's more reliably set across platforms
-        let timestamp_to_check = modified.or(created);
+        // Use the maximum of modified and created timestamps.
+        // This ensures that a file qualifies if EITHER timestamp is recent enough,
+        // which is useful because:
+        // - A newly created file will have a recent created time
+        // - A recently modified file will have a recent modified time
+        // - Using max() captures both cases for the most intuitive behavior
+        let timestamp_to_check = match (modified, created) {
+            (Some(m), Some(c)) => Some(if m > c { m } else { c }),
+            (Some(m), None) => Some(m),
+            (None, Some(c)) => Some(c),
+            (None, None) => None,
+        };
         
         // If we have a timestamp, check if it's recent enough
         // If no timestamp is available, conservatively exclude the file
