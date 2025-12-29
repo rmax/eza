@@ -1,15 +1,15 @@
-# Mark Recent Files Feature Report
+# Recent Files Feature Report
 
 ## Summary
 
-Implemented a new CLI flag: `--since=<DURATION>`. When provided, files that were created or modified within the supplied duration will have an appended asterisk (` *`) in listings. This works across views (lines, grid, details, grid-details, and tree).
+Implemented a new CLI flag: `--since=<DURATION>`. When provided, files that were created or modified within the supplied duration will have an appended asterisk (` *`) in listings. This works across views (lines, grid, details, grid-details, and tree). (Previously exposed as `--mark`, now provided by `--since`.)
 
 Usage example: `eza --tree --since 5s` will mark files created/modified within the last 5 seconds.
 
 ## Changes made
 
 - options:
-  - Replaced `--mark` with `--since` in `src/options/flags.rs` (takes a value).
+  - Replaced the previous marking flag with `--since` in `src/options/flags.rs` (takes a value).
   - Documented the flag in `src/options/help.rs` and `man/eza.1.md`.
   - Implemented `Options::since_duration` parser in `src/options/file_name.rs` which parses the provided duration using humantime (supports values like `5s`, `2m`, `1h`, `1d`).
 
@@ -48,22 +48,22 @@ Usage example: `eza --tree --since 5s` will mark files created/modified within t
   - The asterisk is appended directly to the printed filename. In grid views, this increases the cell width and might impact grid layout slightly. This is acceptable; if desired, we could consider placing a separate column (like the git status column) for marks.
 
 - Configuration and environment variables:
-  - Currently, the `--mark` flag must be supplied on each invocation. Consider adding an environment variable (e.g., `EZA_MARK_DURATION`) in future to allow a persistent default.
+  - Currently, the duration flag must be supplied on each invocation. Consider adding an environment variable (e.g., `EZA_SINCE_DURATION`) in future to allow a persistent default.
 
 - Tests:
   - No new unit tests were added specifically for the marking behavior. Creating deterministic tests requires generating files with controlled timestamps (see `devtools/generate-timestamp-test-dir.sh`). If you want, I can add integration tests that create files with modified timestamps and assert the presence of a trailing `*` in output.
 
 ## Future improvements
 
-- Add tests that explicitly exercise `--mark` behavior with a generated timestamped test directory.
-- Consider adding a `--mark-symbol` option or theme config for the marker character and its style (e.g., make it configurable or use a dedicated style code).
-- Add environment variable `EZA_MARK_DURATION` to configure default marking behavior.
+- Add tests that explicitly exercise the marking behavior (using `--since`) with a generated timestamped test directory.
+- Consider adding a `--mark-symbol` option or theme config for the marker character and its style (e.g., make it configurable or use a dedicated style code). (Would also apply to `--since` usage.)
+- Add environment variable `EZA_SINCE_DURATION` to configure default marking behavior.
 
 ---
 
 If you'd like, I can:
 
 - Add automated tests for the feature (create files with specific timestamps and verify output). If you want that I will add a small integration test and update the test data using `devtools/generate-timestamp-test-dir.sh`.
-- Implement an environment variable for a default mark duration.
+- Implement an environment variable for a default since duration (e.g., `EZA_SINCE_DURATION`).
 
 Would you like me to add tests for this feature now?
